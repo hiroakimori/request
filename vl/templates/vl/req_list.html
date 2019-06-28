@@ -1,0 +1,104 @@
+{% extends 'vl/base.html' %}
+
+{% block content %}
+
+{% if user.is_superuser %} <!-- SU判定 -->
+    <h4 class="my-4">{{ user.username }}（管理者）の休暇予定</h4>
+
+    <!-- リスト出力 -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th>休暇取得日</th>
+                <th>メールアドレス</th>
+                <th>休暇種類</th>
+                <th>申請理由</th>
+                <th>休暇申請日</th>
+                <th>ステータス</th>
+            </tr>
+        </thead>
+        <tbody>
+    {% for leave in my_leaves %}
+        <tr>
+            <th>{{ leave.date|date:"Y/m/d" }}</th>
+            <td>{{ leave.user }}</td>
+            <td>{{ leave.ltype }}</td>
+            <td>{{ leave.text|linebreaksbr }}</td>
+            <td>{{ leave.created_date|date:"Y/m/d f" }}</td>
+            <td>{% if leave.approval %} 承認済 {% else %} 申請中 {% endif %}</td>
+        </tr>
+    {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- 全員分リスト出力 -->
+    <h4 class="my-4">全員分のリスト</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>休暇取得日</th>
+                <th>メールアドレス</th>
+                <th>休暇種類</th>
+                <th>申請理由</th>
+                <th>休暇申請日</th>
+                <th>ステータス</th>
+            </tr>
+        </thead>
+        <tbody>
+    {% for leave in all_leaves %}
+        <tr>
+            <th>{{ leave.date|date:"Y/m/d" }}</th>
+            <td>{{ leave.user }}</td>
+            <td>{{ leave.ltype }}</td>
+            <td>{{ leave.text|linebreaksbr }}</td>
+            <td>{{ leave.created_date|date:"Y/m/d f" }}</td>
+            <td>{% if leave.approval %} 承認済 {% else %} <a href="{% url 'approve' pk=leave.pk %}">申請中</a> {% endif %}</td>
+        </tr>
+    {% endfor %}
+        </tbody>
+    </table>
+
+{% elif user.is_authenticated %} <!-- User判定 -->
+    <h4 class="my-4">{{ user.username }}の休暇予定</h4>
+    <!-- リスト出力 -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th>休暇取得日</th>
+                <th>メールアドレス</th>
+                <th>休暇種類</th>
+                <th>申請理由</th>
+                <th>休暇申請日</th>
+                <th>ステータス</th>
+            </tr>
+        </thead>
+        <tbody>
+    {% for leave in my_leaves %}
+        <tr>
+            <th>{{ leave.date|date:"Y/m/d" }}</th>
+            <td>{{ leave.user }}</td>
+            <td>{{ leave.ltype }}</td>
+            <td>{{ leave.text|linebreaksbr }}</td>
+            <td>{{ leave.created_date|date:"Y/m/d f" }}</td>
+            <td>{% if leave.approval %} 承認済 {% else %} 申請中 {% endif %}</td>
+        </tr>
+    {% endfor %}
+        </tbody>
+    </table>
+{% else %} <!-- ログインしていない時 -->
+    <div class="my-4">
+    <div>休暇申請システム(試作)です。</div>
+    <div class="mb-3">登録してあるアカウントは以下の通りです。</div>
+    <div>管理者：</div>
+    <div class="mb-3">admin@g-agnle.co.jp  PW:gangle1234</div>
+    
+    <div>一般スタッフ：</div>
+    <div>test1@g-agnle.co.jp  PW:gangle1234</div>
+    <div class="mb-5">test2@g-agnle.co.jp  PW:gangle1234</div>
+    <div>右上の<a href="{% url 'login' %}">ログイン</a>からいずれかのアカウントでログインしてください。</div>
+    </div>
+
+    
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'vl/base.html' %}
+
+{% block content %}
+    <h4 class="my-4">新規休暇申請</h4>
+    <form method="POST" class="post-form">{% csrf_token %}
+
+    	<div class="row">
+    		<div class="col-12">取得日：{{ form.date }}</div>
+    	</div>
+    	<div class="row my-4">
+    		<div class="col-12">種類：{{ form.ltype }}</div>
+    	</div>
+    	<div class="row">
+    		<div class="col-12">申請理由:{{ form.text }}</div>
+    	</div>
+        <button type="submit" class="save btn btn-primary">申請</button>
+    </form>
+{% endblock %}
